@@ -1,18 +1,10 @@
 name: ci
 
-on: [push, pull_request]
-
+on: [push]
 jobs:
   uv-example:
     name: python
-    runs-on: Windows-latest
-
-    strategy:
-      matrix:
-        python-version:
-          - "3.10"
-          - "3.11"
-          - "3.12"
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -21,12 +13,13 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+        run: uv python install
 
-      - name: run pre-commit
+      - name: Install the project
+        run: uv sync --all-extras --dev
+
+      - name: Run tools
         run: uv run pre-commit run -a
 
-      - name: run unittest
+      - name: Run tests
         run: uv run python -m unittest

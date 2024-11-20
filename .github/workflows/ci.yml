@@ -1,0 +1,15 @@
+name: ci
+
+jobs:
+  uv-example:
+    name: python
+    runs-on: Windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: run pre-commit
+        run: uv run pre-commit run -a
+
+      - name: run unittest
+        run: uv run python -m unittest

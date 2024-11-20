@@ -23,8 +23,8 @@ jobs:
       - name: Set up Python
         run: uv python install ${{ matrix.python-version }}
 
-      - name: run pre-commit ${{ matrix.python-version }}
-        run: uv run pre-commit run -a ${{ matrix.python-version }}
+      - name: run pre-commit
+        run: uv run pre-commit run -a
 
-      - name: run unittest ${{ matrix.python-version }}
-        run: uv run python -m unittest ${{ matrix.python-version }}
+      - name: run unittest
+        run: uv run python -m unittest

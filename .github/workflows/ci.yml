@@ -1,9 +1,18 @@
 name: ci
 
+on: [push, pull_request]
+
 jobs:
   uv-example:
     name: python
     runs-on: Windows-latest
+
+    strategy:
+      matrix:
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
 
     steps:
       - uses: actions/checkout@v4
@@ -13,9 +22,3 @@ jobs:
 
       - name: run unittest
         run: uv run python -m unittest
-strategy:
-  matrix:
-    python-version:
-      - "3.10"
-      - "3.11"
-      - "3.12"

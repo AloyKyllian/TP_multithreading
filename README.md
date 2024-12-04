@@ -216,3 +216,5 @@ git add .
 git commit -m "task & test"
 git push
 ```
+
+source $HOME/.local/bin/env

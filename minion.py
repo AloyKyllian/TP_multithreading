@@ -4,7 +4,8 @@ from task import Task
 ADDRESS = ('127.0.0.1',50000)
 AUTHKEY = b'voila'
 
-class Minion(QueueClient):pass
+class Minion(QueueClient):
+    pass
 
 if __name__ == '__main__':
     Minion.register('task_queue')

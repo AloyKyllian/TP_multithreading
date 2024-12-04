@@ -5,7 +5,8 @@ ADDRESS = ('127.0.0.1',50000)
 AUTHKEY = b'voila'
 NB_TASKS = 500
 
-class Boss(QueueClient):pass
+class Boss(QueueClient):
+    pass
 
 if __name__ == '__main__':
     Boss.register('task_queue')

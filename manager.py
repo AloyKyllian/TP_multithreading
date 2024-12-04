@@ -4,11 +4,13 @@ ADDRESS = ('127.0.0.1',50000)
 AUTHKEY = b'voila'
 
 
-class QueueManager(BaseManager): pass
+class QueueManager(BaseManager): 
+    pass
         
         
         
-class QueueClient(BaseManager): pass
+class QueueClient(BaseManager): 
+    pass
     
         
 

@@ -14,26 +14,36 @@ class Task:
         # prepare room for the results
         self.x = np.zeros((self.size))
         self.time = 0
-    
+
     def __eq__(self, other):
         if not isinstance(other, Task):
             return False
-        if self.identifier != other.identifier and self.size != other.size and self.a != other.a and self.b != other.b and self.x != other.x and self.time != other.time:
+        if (
+            self.identifier != other.identifier
+            and self.size != other.size
+            and self.a != other.a
+            and self.b != other.b
+            and self.x != other.x
+            and self.time != other.time
+        ):
             return False
         return True
 
     def to_json(self):
-        txt =json.dumps(
-            {'identifier': self.identifier,
-            "size": self.size,
-            "a": self.a.tolist(),
-            "b": self.b.tolist(),
-            "x": self.x.tolist(),
-            "time": self.time
-            },sort_keys=True)
-            
+        txt = json.dumps(
+            {
+                "identifier": self.identifier,
+                "size": self.size,
+                "a": self.a.tolist(),
+                "b": self.b.tolist(),
+                "x": self.x.tolist(),
+                "time": self.time,
+            },
+            sort_keys=True,
+        )
+
         return txt
-    
+
     @staticmethod
     def from_json(data):
         task = Task()

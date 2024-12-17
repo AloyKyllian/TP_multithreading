@@ -9,12 +9,9 @@ class Minion(QueueClient):
 
 
 if __name__ == "__main__":
-    Minion.register("task_queue")
-    Minion.register("result_queue")
-    m = Minion(address=ADDRESS, authkey=AUTHKEY)
-    m.connect()
-    task_queue = m.task_queue()
-    result_queue = m.result_queue()
+    m = Minion()
+    task_queue = m.task_queue
+    result_queue = m.result_queue
     while True:
         cpt = 0
         while task_queue.qsize() > 0:

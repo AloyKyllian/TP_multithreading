@@ -218,3 +218,15 @@ git push
 ```
 
 source $HOME/.local/bin/env
+
+
+Pour une meme tache
+time minion.py 0.40308431000084965
+resul minion [-2.86928542 -0.21209887 -0.48722827 ...  1.86955375  1.81221005
+ -1.08180001]
+time c++ 109.21178436279297
+result c++ [-2.86924243 -0.21211024 -0.48720407 ...  1.86960566  1.81211662
+ -1.0818063 ]
+
+
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Release

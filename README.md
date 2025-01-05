@@ -217,16 +217,97 @@ git commit -m "task & test"
 git push
 ```
 
-source $HOME/.local/bin/env
+### Lancement et résolution de taches
 
+1. Lancer les programmes
 
-Pour une meme tache
-time minion.py 0.40308431000084965
-resul minion [-2.86928542 -0.21209887 -0.48722827 ...  1.86955375  1.81221005
- -1.08180001]
-time c++ 109.21178436279297
-result c++ [-2.86924243 -0.21211024 -0.48720407 ...  1.86960566  1.81211662
- -1.0818063 ]
+```bash
+uv run manager.py
+```
 
+```bash
+uv run proxy.py
+```
 
+```bash
+uv run boss.py
+```
+
+Attendez que le boss est envoyer les taches puis :
+
+```bash
+uv run minion.py
+```
+
+Lancer une seule fois la configuration :
+
+```bash
 cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+```
+
+Puis une fois la compilation :
+
+```bash
+cmake --build build
+```
+
+Et pour executer le low_level.cpp :
+
+```bash
+./build/low_level
+```
+
+2. Résultats
+
+Pour une même tache :
+
+| Langage | Temps (s) | Résultat                                                                    |
+| ------- | --------- | --------------------------------------------------------------------------- |
+| Python  | 0.403     | [-2.86928542 -0.21209887 -0.48722827 ... 1.86955375 1.81221005 -1.08180001] |
+| C++     | 109.211   | [-2.86924243 -0.21211024 -0.48720407 ... 1.86960566 1.81211662 -1.0818063 ] |
+
+### Optimisations apportées au C++
+
+1. **Mode Release :**
+
+Nous avons utilisé la commande suivante pour compiler en mode Release, ce qui active les optimisations du compilateur :
+
+```bash
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+```
+
+2. **Utilisation des threads avec Eigen :**
+
+Nous avons activé le parallélisme avec Eigen en configurant le nombre de threads. Sur notre machine (6 cœurs physiques), nous avons expérimenté différentes configurations :
+
+- **Nombre optimal de threads :** Nous avons constaté que **12 threads** (avec hyperthreading) offrent les meilleures performances.
+- **Impact des variations :** En dessous ou au-delà de 12 threads, les performances diminuent en raison d'une surcharge liée à la gestion des threads ou à l'épuisement des ressources.
+
+Tous les tests suivants ont donc été réalisés avec un nombre de threads fixé à **12**.
+
+Nous avons également ajouter l'utilisation des threads de Eigen. Notre PC est un 6 coeurs. Nous avons expérimenter d'effectuer une même tache en faissant varier le nombre de thread. Et au dela de 12 thread ou en dessou de 12, nous perdon en performance.
+
+pour les tests suivant nous avons fixé le nombre de thread a 12
+
+3. **Taille fixe des matrices**
+
+Lors des tests, nous avons observé une limitation sur la taille maximale des matrices. En pratique :
+
+- **Taille maximale :** La matrice `a` ne peut pas dépasser une taille de **100x100** sans entraîner des erreurs ou une surcharge mémoire.
+- **Conséquence :** Tous les tests ont donc été réalisés avec des matrices de taille fixe **100x100** pour garantir des résultats cohérents et éviter les dépassements de ressources.
+
+4. **Tests avec différents types de matrices**
+
+Nous avons comparé les performances en fonction des différents types de matrices proposés par Eigen. Voici les résultats classés par ordre de rapidité :
+
+| Rang | Type de matrice                                                         | Temps relatif  |
+| ---- | ----------------------------------------------------------------------- | -------------- |
+| 1    | `Eigen::Matrix<float, SIZE, SIZE, Eigen::ColMajor>`                     | Le plus rapide |
+| 2    | `Eigen::Matrix<float, SIZE, SIZE, Eigen::RowMajor>`                     | Très rapide    |
+| 3    | `Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>` | Rapide         |
+| 4    | `Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>` | Le plus lent   |
+
+### Observations
+
+- **Matrices à taille fixe (`SIZE, SIZE`)** : Plus performantes que les matrices dynamiques grâce à des optimisations du compilateur.
+- **Ordre de stockage (`ColMajor` vs `RowMajor`)** : Les matrices en format colonne majoritaire (`ColMajor`) sont légèrement plus rapides, car elles sont optimisées pour les bibliothèques utilisées en arrière-plan.

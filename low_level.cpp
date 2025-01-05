@@ -1,6 +1,7 @@
 #include <cpr/cpr.h>
 #include <iostream>
 using namespace std;
+#include <Eigen/Core>
 #include <Eigen/Dense>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -8,17 +9,22 @@ using namespace Eigen;
 #include <chrono>
 using json = nlohmann::json;
 
+const int SIZE_FIX = 100;
+
 class Task {
 public:
   int identifier;
   int size;
-  MatrixXf a;
+  Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> a;
   VectorXf b;
   VectorXf x;
   float time;
 
 public:
-  Task(int id, int s, MatrixXf &a1, VectorXf &b1, VectorXf &x1, float t) {
+  Task(
+      int id, int s,
+      Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> &a1,
+      VectorXf &b1, VectorXf &x1, float t) {
     this->identifier = id;
     this->size = s;
     this->a = a1;
@@ -50,7 +56,8 @@ public:
     int id = j_data["identifier"];
     int size = j_data["size"];
 
-    MatrixXf a(size, size);
+    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> a(
+        100, 100);
     for (int i = 0; i < size; ++i) {
       for (int j = 0; j < size; ++j) {
         a(i, j) = j_data["a"][i][j];
@@ -73,16 +80,16 @@ public:
   };
 
   void work() {
+    Eigen::setNbThreads(12);
+    std::cout << "Using " << Eigen::nbThreads()
+              << " threads for Eigen operations.\n";
     auto start = std::chrono::high_resolution_clock::now();
 
-    // Utilisation d'Eigen pour résoudre le système Ax = b
-    Eigen::VectorXf solution = this->a.colPivHouseholderQr().solve(this->b);
-
-    // Mise à jour du vecteur x avec la solution
-    this->x = solution;
+    Eigen::VectorXf solution = this->a.householderQr().solve(this->b);
 
     auto end = std::chrono::high_resolution_clock::now();
     this->time = std::chrono::duration<float>(end - start).count();
+    this->x = solution;
   };
 };
 

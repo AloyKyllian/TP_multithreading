@@ -24,7 +24,7 @@ if __name__ == "__main__":
     while result_queue.qsize() < NB_TASKS:
         pass
 
-    for i in range(NB_TASKS*2):
+    for i in range(NB_TASKS * 2):
         t = result_queue.get()
         print(t.time)
         print(t.x)

@@ -4,7 +4,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(PROJECT_NAME "low_level")
 project(${PROJECT_NAME})
 
-
 option(CPR_ENABLE_SSL "" OFF)
 
 include(FetchContent)

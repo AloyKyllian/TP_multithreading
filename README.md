@@ -311,3 +311,9 @@ Nous avons comparé les performances en fonction des différents types de matric
 
 - **Matrices à taille fixe (`SIZE, SIZE`)** : Plus performantes que les matrices dynamiques grâce à des optimisations du compilateur.
 - **Ordre de stockage (`ColMajor` vs `RowMajor`)** : Les matrices en format colonne majoritaire (`ColMajor`) sont légèrement plus rapides, car elles sont optimisées pour les bibliothèques utilisées en arrière-plan.
+
+### Comparaison finale
+
+Malgré ces optimisations, le temps d'exécution de Python reste environ 10 fois plus rapide pour des petites matrices.
+
+Python bénéficie de bibliothèques hautement optimisées (comme NumPy).
